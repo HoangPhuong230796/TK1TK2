@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trắc nghiệm</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .question { margin-bottom: 15px; }
+        .result { font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>Bài trắc nghiệm</h2>
+    <div id="quiz"></div>
+    <button onclick="submitQuiz()">Nộp bài</button>
+    <button onclick="loadQuiz()">Làm lại</button>
+    <div id="result"></div>
+
+    <script>
+        let questions = [];
+        async function loadQuiz() {
+            document.getElementById("result").innerHTML = "";
+            document.getElementById("quiz").innerHTML = "Đang tải câu hỏi...";
+            const response = await fetch("questions.json");
+            questions = await response.json();
+            questions.sort(() => Math.random() - 0.5); // Xáo trộn câu hỏi
+            renderQuiz();
+        }
+
+        function renderQuiz() {
+            let quizHtml = "";
+            questions.forEach((q, index) => {
+                let options = [q.option_A, q.option_B, q.option_C, q.option_D];
+                options.sort(() => Math.random() - 0.5); // Xáo trộn đáp án
+                quizHtml += `<div class='question'>
+                    <p>${index + 1}. ${q.question}</p>
+                    ${options.map(opt => `
+                        <label>
+                            <input type='radio' name='q${index}' value='${opt}'> ${opt}
+                        </label><br>
+                    `).join('')}
+                </div>`;
+            });
+            document.getElementById("quiz").innerHTML = quizHtml;
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            questions.forEach((q, index) => {
+                let selected = document.querySelector(`input[name='q${index}']:checked`);
+                if (selected && selected.value === q[q.correct_answer]) {
+                    score++;
+                }
+            });
+            document.getElementById("result").innerHTML = `Bạn trả lời đúng ${score} / ${questions.length} câu.`;
+        }
+
+        loadQuiz();
+    </script>
+</body>
+</html>
