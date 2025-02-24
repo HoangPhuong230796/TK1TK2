@@ -12,6 +12,7 @@
         .incorrect { background-color: lightcoral; }
         .result { font-weight: bold; }
         #timer { font-size: 20px; font-weight: bold; color: red; position: fixed; top: 10px; right: 10px; display: none; }
+        .answer { font-weight: bold; color: blue; display: none; }
     </style>
 </head>
 <body>
@@ -72,6 +73,7 @@
                             <input type='radio' name='q${i}' value='${opt}'> ${opt}
                         </label><br>
                     `).join('')}
+                    <p class='answer' id='answer${i}'>Đáp án đúng: <strong>${q.correct_answer}</strong></p>
                 </div>`;
             }
             document.getElementById("quiz").innerHTML += quizHtml;
@@ -90,16 +92,26 @@
         function submitQuiz() {
             clearInterval(timerInterval);
             let score = 0;
+            let unanswered = 0;
             questions.forEach((q, index) => {
                 let selected = document.querySelector(`input[name='q${index}']:checked`);
                 let questionDiv = document.getElementById(`q${index}`);
-                if (selected && selected.value === q.correct_answer) {
+                if (!selected) {
+                    unanswered++;
+                } else if (selected.value === q.correct_answer) {
                     score++;
                     questionDiv.classList.add("correct");
                 } else {
                     questionDiv.classList.add("incorrect");
+                    document.getElementById(`answer${index}`).style.display = "block";
                 }
             });
+            
+            if (unanswered > 0) {
+                alert(`Bạn chưa trả lời ${unanswered} câu! Vui lòng hoàn thành tất cả câu hỏi.`);
+                return;
+            }
+            
             alert(`Bạn trả lời đúng ${score} / ${questions.length} câu. Thời gian làm bài: ${document.getElementById("timer").textContent}`);
             document.getElementById("result").innerHTML = `Bạn trả lời đúng ${score} / ${questions.length} câu. Thời gian làm bài: ${document.getElementById("timer").textContent}`;
         }
