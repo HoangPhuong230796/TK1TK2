@@ -54,7 +54,7 @@
             questions.forEach((q, index) => {
                 let options = [q.option_A, q.option_B, q.option_C, q.option_D];
                 options.sort(() => Math.random() - 0.5);
-                quizHtml += `<div class='question' id='q${index}'>
+                quizHtml += `<div class='question' id='q${index}' data-visible="false">
                     <p>${index + 1}. ${q.question}</p>
                     ${options.map(opt => `
                         <label>
@@ -64,13 +64,28 @@
                 </div>`;
             });
             document.getElementById("quiz").innerHTML = quizHtml;
+            observeQuestions();
+        }
+
+        function observeQuestions() {
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.display = "block";
+                        entry.target.setAttribute("data-visible", "true");
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll(".question").forEach(question => {
+                observer.observe(question);
+            });
         }
 
         function startQuiz() {
             document.getElementById("startButton").style.display = "none";
             document.getElementById("submitButton").style.display = "block";
             document.getElementById("retryButton").style.display = "block";
-            document.querySelectorAll(".question").forEach(q => q.style.display = "block");
             startTimer();
         }
 
