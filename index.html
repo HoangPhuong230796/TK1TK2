@@ -12,7 +12,7 @@
         .incorrect { background-color: lightcoral; }
         .result { font-weight: bold; }
         #timer { font-size: 20px; font-weight: bold; color: red; position: fixed; top: 10px; right: 10px; display: none; }
-        .answer { font-weight: bold; color: blue; display: block; }
+        .answer { font-weight: bold; color: blue; display: none; }
     </style>
 </head>
 <body>
@@ -73,7 +73,7 @@
                             <input type='radio' name='q${i}' value='${opt}'> ${opt}
                         </label><br>
                     `).join('')}
-                    <p class='answer' id='answer${i}'>Đáp án đúng: <strong>${q.correct_answer}</strong></p>
+                    <p class='answer' id='answer${i}' style='display: none;'>Đáp án đúng: <strong>${q.correct_answer}</strong></p>
                 </div>`;
             }
             document.getElementById("quiz").innerHTML += quizHtml;
@@ -92,31 +92,31 @@
 
         function submitQuiz() {
             clearInterval(timerInterval);
-            let correctCount = 0;
-            let incorrectCount = 0;
-            let unansweredCount = 0;
-            
+            let score = 0;
+            let incorrect = 0;
+            let unanswered = 0;
+
             questions.forEach((q, index) => {
                 let selected = document.querySelector(`input[name='q${index}']:checked`);
                 let questionDiv = document.getElementById(`q${index}`);
-                let answerDisplay = document.getElementById(`answer${index}`);
+                let answerElement = document.getElementById(`answer${index}`);
                 
+                answerElement.style.display = "block";
+
                 if (!selected) {
-                    unansweredCount++;
+                    unanswered++;
                     questionDiv.classList.add("incorrect");
                 } else if (selected.value === q.correct_answer) {
-                    correctCount++;
+                    score++;
                     questionDiv.classList.add("correct");
                 } else {
-                    incorrectCount++;
+                    incorrect++;
                     questionDiv.classList.add("incorrect");
                 }
-                answerDisplay.style.display = "block";
             });
             
-            alert(`Bạn trả lời đúng: ${correctCount}\nBạn trả lời sai: ${incorrectCount}\nBạn chưa chọn đáp án: ${unansweredCount}\nThời gian làm bài: ${document.getElementById("timer").textContent}`);
-            
-            document.getElementById("result").innerHTML = `Bạn trả lời đúng ${correctCount} / ${questions.length} câu. Thời gian làm bài: ${document.getElementById("timer").textContent}`;
+            alert(`Bạn trả lời đúng ${score} câu, sai ${incorrect} câu, chưa chọn ${unanswered} câu. Thời gian làm bài: ${document.getElementById("timer").textContent}`);
+            document.getElementById("result").innerHTML = `Bạn trả lời đúng ${score} câu, sai ${incorrect} câu, chưa chọn ${unanswered} câu. Thời gian làm bài: ${document.getElementById("timer").textContent}`;
         }
     </script>
 </body>
