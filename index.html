@@ -19,6 +19,7 @@
     <p id="timer">00:00</p>
     <button id="startButton" onclick="startQuiz()">Bắt đầu làm bài</button>
     <div id="quiz"></div>
+    <button id="loadMoreButton" onclick="loadMoreQuestions()" style="display:none;">Hiển thị thêm</button>
     <button id="submitButton" onclick="submitQuiz()" style="display:none;">Nộp bài</button>
     <button id="retryButton" onclick="loadQuiz()" style="display:none;">Làm lại</button>
     <div id="result"></div>
@@ -27,6 +28,8 @@
         let questions = [];
         let timerInterval;
         let secondsElapsed = 0;
+        let displayedCount = 0;
+        const batchSize = 10;
 
         function startTimer() {
             clearInterval(timerInterval);
@@ -46,46 +49,41 @@
             const response = await fetch("questions.json");
             questions = await response.json();
             questions.sort(() => Math.random() - 0.5);
+            displayedCount = 0;
             renderQuiz();
         }
 
         function renderQuiz() {
+            document.getElementById("quiz").innerHTML = "";
+            loadMoreQuestions();
+        }
+
+        function loadMoreQuestions() {
             let quizHtml = "";
-            questions.forEach((q, index) => {
+            let end = Math.min(displayedCount + batchSize, questions.length);
+            for (let i = displayedCount; i < end; i++) {
+                let q = questions[i];
                 let options = [q.option_A, q.option_B, q.option_C, q.option_D];
                 options.sort(() => Math.random() - 0.5);
-                quizHtml += `<div class='question' id='q${index}' data-visible="false">
-                    <p>${index + 1}. ${q.question}</p>
+                quizHtml += `<div class='question' id='q${i}' style='display: block;'>
+                    <p>${i + 1}. ${q.question}</p>
                     ${options.map(opt => `
                         <label>
-                            <input type='radio' name='q${index}' value='${opt}'> ${opt}
+                            <input type='radio' name='q${i}' value='${opt}'> ${opt}
                         </label><br>
                     `).join('')}
                 </div>`;
-            });
-            document.getElementById("quiz").innerHTML = quizHtml;
-            observeQuestions();
-        }
-
-        function observeQuestions() {
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.display = "block";
-                        entry.target.setAttribute("data-visible", "true");
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            document.querySelectorAll(".question").forEach(question => {
-                observer.observe(question);
-            });
+            }
+            document.getElementById("quiz").innerHTML += quizHtml;
+            displayedCount = end;
+            document.getElementById("loadMoreButton").style.display = displayedCount < questions.length ? "block" : "none";
         }
 
         function startQuiz() {
             document.getElementById("startButton").style.display = "none";
             document.getElementById("submitButton").style.display = "block";
             document.getElementById("retryButton").style.display = "block";
+            document.getElementById("loadMoreButton").style.display = "block";
             startTimer();
         }
 
