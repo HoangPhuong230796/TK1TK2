@@ -6,25 +6,45 @@
     <title>Trắc nghiệm</title>
     <style>
         body { font-family: Arial, sans-serif; }
-        .question { margin-bottom: 15px; }
+        .question { margin-bottom: 15px; padding: 10px; border-radius: 5px; display: none; }
+        .correct { background-color: lightgreen; }
+        .incorrect { background-color: lightcoral; }
         .result { font-weight: bold; }
+        #timer { font-size: 20px; font-weight: bold; color: red; position: fixed; top: 10px; right: 10px; display: none; }
     </style>
 </head>
 <body>
     <h2>Bài trắc nghiệm</h2>
+    <p id="timer">00:00</p>
+    <button id="startButton" onclick="startQuiz()">Bắt đầu làm bài</button>
     <div id="quiz"></div>
-    <button onclick="submitQuiz()">Nộp bài</button>
-    <button onclick="loadQuiz()">Làm lại</button>
+    <button id="submitButton" onclick="submitQuiz()" style="display:none;">Nộp bài</button>
+    <button id="retryButton" onclick="loadQuiz()" style="display:none;">Làm lại</button>
     <div id="result"></div>
 
     <script>
         let questions = [];
+        let timerInterval;
+        let secondsElapsed = 0;
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            secondsElapsed = 0;
+            document.getElementById("timer").style.display = "block";
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                let minutes = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+                let seconds = (secondsElapsed % 60).toString().padStart(2, '0');
+                document.getElementById("timer").textContent = `${minutes}:${seconds}`;
+            }, 1000);
+        }
+
         async function loadQuiz() {
             document.getElementById("result").innerHTML = "";
             document.getElementById("quiz").innerHTML = "Đang tải câu hỏi...";
             const response = await fetch("questions.json");
             questions = await response.json();
-            questions.sort(() => Math.random() - 0.5); // Xáo trộn câu hỏi
+            questions.sort(() => Math.random() - 0.5);
             renderQuiz();
         }
 
@@ -32,8 +52,8 @@
             let quizHtml = "";
             questions.forEach((q, index) => {
                 let options = [q.option_A, q.option_B, q.option_C, q.option_D];
-                options.sort(() => Math.random() - 0.5); // Xáo trộn đáp án
-                quizHtml += `<div class='question'>
+                options.sort(() => Math.random() - 0.5);
+                quizHtml += `<div class='question' id='q${index}'>
                     <p>${index + 1}. ${q.question}</p>
                     ${options.map(opt => `
                         <label>
@@ -45,18 +65,29 @@
             document.getElementById("quiz").innerHTML = quizHtml;
         }
 
+        function startQuiz() {
+            document.getElementById("startButton").style.display = "none";
+            document.getElementById("submitButton").style.display = "block";
+            document.getElementById("retryButton").style.display = "block";
+            document.querySelectorAll(".question").forEach(q => q.style.display = "block");
+            startTimer();
+        }
+
         function submitQuiz() {
+            clearInterval(timerInterval);
             let score = 0;
             questions.forEach((q, index) => {
                 let selected = document.querySelector(`input[name='q${index}']:checked`);
+                let questionDiv = document.getElementById(`q${index}`);
                 if (selected && selected.value === q[q.correct_answer]) {
                     score++;
+                    questionDiv.classList.add("correct");
+                } else {
+                    questionDiv.classList.add("incorrect");
                 }
             });
-            document.getElementById("result").innerHTML = `Bạn trả lời đúng ${score} / ${questions.length} câu.`;
+            document.getElementById("result").innerHTML = `Bạn trả lời đúng ${score} / ${questions.length} câu. Thời gian làm bài: ${document.getElementById("timer").textContent}`;
         }
-
-        loadQuiz();
     </script>
 </body>
 </html>
