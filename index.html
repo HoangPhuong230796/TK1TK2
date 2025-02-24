@@ -100,6 +100,7 @@
                     questionDiv.classList.add("incorrect");
                 }
             });
+            alert(`Bạn trả lời đúng ${score} / ${questions.length} câu. Thời gian làm bài: ${document.getElementById("timer").textContent}`);
             document.getElementById("result").innerHTML = `Bạn trả lời đúng ${score} / ${questions.length} câu. Thời gian làm bài: ${document.getElementById("timer").textContent}`;
         }
     </script>
