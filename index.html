@@ -81,13 +81,15 @@
             document.getElementById("loadMoreButton").style.display = displayedCount < questions.length ? "block" : "none";
         }
 
-        function startQuiz() {
-            document.getElementById("startButton").style.display = "none";
-            document.getElementById("submitButton").style.display = "block";
-            document.getElementById("retryButton").style.display = "block";
-            document.getElementById("loadMoreButton").style.display = "block";
-            startTimer();
-        }
+function startQuiz() {
+    document.getElementById("startButton").style.display = "none";
+    document.getElementById("submitButton").style.display = "block";
+    document.getElementById("retryButton").style.display = "block";
+    document.getElementById("loadMoreButton").style.display = "block";
+    loadQuiz(); // GỌI HÀM NÀY ĐỂ HIỂN THỊ CÂU HỎI NGAY LẬP TỨC
+    startTimer();
+}
+
 
         function submitQuiz() {
             clearInterval(timerInterval);
