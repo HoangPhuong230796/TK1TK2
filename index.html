@@ -79,7 +79,7 @@
             questions.forEach((q, index) => {
                 let selected = document.querySelector(`input[name='q${index}']:checked`);
                 let questionDiv = document.getElementById(`q${index}`);
-                if (selected && selected.value === q[q.correct_answer]) {
+                if (selected && selected.value === q.correct_answer) {
                     score++;
                     questionDiv.classList.add("correct");
                 } else {
