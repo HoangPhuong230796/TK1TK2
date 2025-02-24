@@ -848,14 +848,6 @@
         "correct_answer": "A"
     },
     {
-        "question": "nan",
-        "option_A": "nan",
-        "option_B": "nan",
-        "option_C": "nan",
-        "option_D": "nan",
-        "correct_answer": "nan"
-    },
-    {
         "question": "Sau khi thao tác máy cắt, nếu sau đó có thao tác tại chỗ dao cách ly hai phía của máy cắt, nhân viên vận hành phải:",
         "option_A": "Kiểm tra chỉ thị tại chỗ trạng thái của máy cắt, khoá điều khiển của máy cắt",
         "option_B": "Kiểm tra chỉ thị trạng thái của máy cắt thông qua tín hiệu điều khiển",
@@ -2208,14 +2200,6 @@
         "correct_answer": "C"
     },
     {
-        "question": "nan",
-        "option_A": "nan",
-        "option_B": "nan",
-        "option_C": "nan",
-        "option_D": "nan",
-        "correct_answer": "nan"
-    },
-    {
         "question": "Chế độ làm mát của MBT1T/2T: ",
         "option_A": "ONAN/ONAF",
         "option_B": "ONAN/ONAF/OFAF",
@@ -2846,14 +2830,6 @@
         "option_C": "Phương án xử lý sự cố luôn có sẵn",
         "option_D": "Câu A, B, C đúng.",
         "correct_answer": "D"
-    },
-    {
-        "question": "nan",
-        "option_A": "nan",
-        "option_B": "nan",
-        "option_C": "nan",
-        "option_D": "nan",
-        "correct_answer": "nan"
     },
     {
         "question": "Theo Thông tư số 28/2014/TT-BCT, quy định quy trình xử lý sự cố Hệ thống điện quốc gia: Nếu không có quy định riêng, máy biến áp dầu được phép quá tải ngắn hạn 30% trong bao lâu",
