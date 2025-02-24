@@ -83,7 +83,7 @@
 
         function startQuiz() {
             document.getElementById("startButton").style.display = "none";
-            document.getElementById("submitButton").style.display = "block";
+            document.getElementById("Button").style.display = "block";
             document.getElementById("retryButton").style.display = "block";
             document.getElementById("loadMoreButton").style.display = "block";
             loadQuiz();
@@ -91,31 +91,35 @@
         }
 
         function submitQuiz() {
-            clearInterval(timerInterval);
-            let score = 0;
-            let incorrect = 0;
-            let unanswered = 0;
+    clearInterval(timerInterval);
+    let score = 0;
+    let incorrect = 0;
+    let unanswered = 0;
 
-            questions.forEach((q, index) => {
-                let selected = document.querySelector(`input[name='q${index}']:checked`);
-                let questionDiv = document.getElementById(`q${index}`);
-                let answerElement = document.getElementById(`answer${index}`);
-                
-                answerElement.style.display = "block";
+    questions.forEach((q, index) => {
+        let questionDiv = document.getElementById(`q${index}`);
+        if (!questionDiv) return; // Nếu câu hỏi chưa hiển thị, bỏ qua
 
-                if (!selected) {
-                    unanswered++;
-                    questionDiv.classList.add("incorrect");
-                } else if (selected.value === q.correct_answer) {
-                    score++;
-                    questionDiv.classList.add("correct");
-                } else {
-                    incorrect++;
-                    questionDiv.classList.add("incorrect");
-                }
-            });
-            
-            alert(`Bạn trả lời đúng ${score} câu, sai ${incorrect} câu, chưa chọn ${unanswered} câu. Thời gian làm bài: ${document.getElementById("timer").textContent}`);
+        let selected = document.querySelector(`input[name='q${index}']:checked`);
+        let answerElement = document.getElementById(`answer${index}`);
+        
+        if (answerElement) {
+            answerElement.style.display = "block"; // Hiển thị đáp án đúng
+        }
+
+        if (!selected) {
+            unanswered++;
+            questionDiv.classList.add("incorrect");
+        } else if (selected.value === q.correct_answer) {
+            score++;
+            questionDiv.classList.add("correct");
+        } else {
+            incorrect++;
+            questionDiv.classList.add("incorrect");
+        }
+    });
+    
+    alert(`Bạn trả lời đúng ${score} câu, sai ${incorrect} câu, chưa chọn ${unanswered} câu.\nThời gian làm bài: ${document.getElementById("timer").textContent}`);
             document.getElementById("result").innerHTML = `Bạn trả lời đúng ${score} câu, sai ${incorrect} câu, chưa chọn ${unanswered} câu. Thời gian làm bài: ${document.getElementById("timer").textContent}`;
         }
     </script>
